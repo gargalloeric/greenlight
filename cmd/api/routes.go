@@ -9,6 +9,7 @@ import (
 func (app *application) routes() http.Handler {
 	router := chi.NewRouter()
 
+	router.Use(app.rateLimit)
 	router.Use(app.recoverPanic)
 
 	router.NotFound(app.notFoundResponse)
