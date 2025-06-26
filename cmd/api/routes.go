@@ -26,5 +26,9 @@ func (app *application) routes() http.Handler {
 		r.Delete("/{id}", app.deleteMovieHandler)
 	})
 
+	router.Route("/v1/users", func(r chi.Router) {
+		r.Post("/", app.registerUserHandler)
+	})
+
 	return router
 }
