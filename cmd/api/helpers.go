@@ -136,8 +136,16 @@ func (app *application) readCSV(qs url.Values, key string, defaultValues []strin
 }
 
 func (app *application) background(fn func()) {
+
+	// Increment the WaitGroup counter in order to know there is still background tasks in execution
+	app.wg.Add(1)
+
 	// Launch a background goroutine
 	go func() {
+
+		// Decrement the WaitGroup before the goroutine returns
+		defer app.wg.Done()
+
 		// Recover any panic
 		defer func() {
 			if err := recover(); err != nil {
