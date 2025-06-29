@@ -31,5 +31,9 @@ func (app *application) routes() http.Handler {
 		r.Put("/activated", app.activateUserHandler)
 	})
 
+	router.Route("/v1/tokens", func(r chi.Router) {
+		r.Post("/authentication", app.createAuthenticationTokenHandler)
+	})
+
 	return router
 }
