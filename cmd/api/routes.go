@@ -28,6 +28,7 @@ func (app *application) routes() http.Handler {
 
 	router.Route("/v1/users", func(r chi.Router) {
 		r.Post("/", app.registerUserHandler)
+		r.Put("/activated", app.activateUserHandler)
 	})
 
 	return router
