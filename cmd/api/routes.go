@@ -19,12 +19,12 @@ func (app *application) routes() http.Handler {
 	router.Get("/v1/healthcheck", app.healthcheckHandler)
 
 	router.Route("/v1/movies", func(r chi.Router) {
-		r.Post("/", app.createMovieHandler)
-		r.Get("/", app.listMoviesHandler)
+		r.With(app.requirePermissions("movies:write")).Post("/", app.createMovieHandler)
+		r.With(app.requirePermissions("movies:read")).Get("/", app.listMoviesHandler)
 
-		r.Get("/{id}", app.showMovieHandler)
-		r.Patch("/{id}", app.updateMovieHandler)
-		r.Delete("/{id}", app.deleteMovieHandler)
+		r.With(app.requirePermissions("movies:read")).Get("/{id}", app.showMovieHandler)
+		r.With(app.requirePermissions("movies:write")).Patch("/{id}", app.updateMovieHandler)
+		r.With(app.requirePermissions("movies:write")).Delete("/{id}", app.deleteMovieHandler)
 	})
 
 	router.Route("/v1/users", func(r chi.Router) {
