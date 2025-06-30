@@ -9,9 +9,10 @@ import (
 func (app *application) routes() http.Handler {
 	router := chi.NewRouter()
 
-	router.Use(app.authenticate)
-	router.Use(app.rateLimit)
 	router.Use(app.recoverPanic)
+	router.Use(app.enableCORS)
+	router.Use(app.rateLimit)
+	router.Use(app.authenticate)
 
 	router.NotFound(app.notFoundResponse)
 	router.MethodNotAllowed(app.methodNotAllowedResponse)
