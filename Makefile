@@ -46,6 +46,8 @@ tidy:
 	@go fmt ./...
 	@echo 'Tidying module dependencies'
 	@go mod tidy
+	@echo 'Verifyig module dependencies...'
+	@go mod verify
 
 ## audit: run quality control checks
 .PHONY: audit
