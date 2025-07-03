@@ -30,6 +30,26 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 	})
 }
 
+var trueClientIP = http.CanonicalHeaderKey("True-Client-IP")
+var xForwardedFor = http.CanonicalHeaderKey("X-Forwarded-For")
+var xRealIP = http.CanonicalHeaderKey("X-Real-IP")
+
+func realIP(r *http.Request) string {
+	var ip string
+
+	if tcip := r.Header.Get(trueClientIP); tcip != "" {
+		ip = tcip
+	} else if xrip := r.Header.Get(xRealIP); xrip != "" {
+		ip = xrip
+	} else if xff := r.Header.Get(xForwardedFor); xff != "" {
+		ip, _, _ = strings.Cut(xff, ",")
+	}
+	if ip == "" || net.ParseIP(ip) == nil {
+		return r.RemoteAddr
+	}
+	return ip
+}
+
 func (app *application) rateLimit(next http.Handler) http.Handler {
 	type client struct {
 		limiter  *rate.Limiter
@@ -60,11 +80,7 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if app.config.limiter.enabled {
-			ip, _, err := net.SplitHostPort(r.RemoteAddr)
-			if err != nil {
-				app.serverErrorResponse(w, r, err)
-				return
-			}
+			ip := realIP(r)
 
 			mu.Lock()
 
