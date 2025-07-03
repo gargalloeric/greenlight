@@ -95,7 +95,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		// This indicates to any
 		// caches that the response may vary based on the value of the Authorization
 		// header in the request.
-		w.Header().Add("Vary", "Authentication")
+		w.Header().Add("Vary", "Authorization")
 
 		authorizationHeader := r.Header.Get("Authorization")
 
