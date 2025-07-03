@@ -45,7 +45,7 @@ func realIP(r *http.Request) string {
 		ip, _, _ = strings.Cut(xff, ",")
 	}
 	if ip == "" || net.ParseIP(ip) == nil {
-		return ""
+		return r.RemoteAddr
 	}
 	return ip
 }
