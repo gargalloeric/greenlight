@@ -34,7 +34,7 @@ var trueClientIP = http.CanonicalHeaderKey("True-Client-IP")
 var xForwardedFor = http.CanonicalHeaderKey("X-Forwarded-For")
 var xRealIP = http.CanonicalHeaderKey("X-Real-IP")
 
-func realIP(r *http.Request) string {
+func realIP(r *http.Request) (string, error) {
 	var ip string
 
 	if tcip := r.Header.Get(trueClientIP); tcip != "" {
@@ -45,9 +45,10 @@ func realIP(r *http.Request) string {
 		ip, _, _ = strings.Cut(xff, ",")
 	}
 	if ip == "" || net.ParseIP(ip) == nil {
-		return r.RemoteAddr
+		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		return ip, err
 	}
-	return ip
+	return ip, nil
 }
 
 func (app *application) rateLimit(next http.Handler) http.Handler {
@@ -80,7 +81,11 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if app.config.limiter.enabled {
-			ip := realIP(r)
+			ip, err := realIP(r)
+			if err != nil {
+				app.serverErrorResponse(w, r, err)
+				return
+			}
 
 			mu.Lock()
 
