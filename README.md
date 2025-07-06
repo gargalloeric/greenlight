@@ -10,6 +10,8 @@ I created Greenlight as a hands-on learning tool to master building production-r
 
 - RESTful API for managing movies, users, and permissions
 - Secure authentication and authorization flows
+- Password recovery/reset functionality
+- Email messages
 - PostgreSQL integration with automated migrations via Goose
 - Clean, scalable project layout based on Go best practices
 - Easily extensible foundation for future enhancements
