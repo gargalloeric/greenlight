@@ -33,11 +33,16 @@ GOOSE_DRIVER=postgres
 GOOSE_MIGRATION_DIR=./migrations
 ```
 
-Prepare the database:
+Start all the services and prepare the database:
 ```bash
 docker compose up -d
 make db/migrations/up
 ```
+
+> [!NOTE]
+> You can access the email test inbox by navigating to the following address in your browser:
+>
+> [http://localhost:8025](http://localhost:8025)
 
 Start the api:
 ```bash
