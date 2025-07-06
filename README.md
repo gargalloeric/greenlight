@@ -33,7 +33,7 @@ GOOSE_DRIVER=postgres
 GOOSE_MIGRATION_DIR=./migrations
 ```
 
-Prepare the database:
+Start all the services and prepare the database:
 ```bash
 docker compose up -d
 make db/migrations/up
