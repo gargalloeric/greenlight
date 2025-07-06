@@ -39,6 +39,10 @@ docker compose up -d
 make db/migrations/up
 ```
 
+> [!NOTE]
+> You can access the email test inbox by navigating to the following address in your browser:
+> [http://localhost:8025](http://localhost:8025)
+
 Start the api:
 ```bash
 make run/api
