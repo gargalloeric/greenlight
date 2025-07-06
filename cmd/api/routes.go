@@ -39,6 +39,7 @@ func (app *application) routes() http.Handler {
 	router.Route("/v1/tokens", func(r chi.Router) {
 		r.Post("/authentication", app.createAuthenticationTokenHandler)
 		r.Post("/password-reset", app.createPasswordResetTokenHandler)
+		r.Post("/activation", app.createActivationTokenHandler)
 	})
 
 	router.Handle("/debug/vars", expvar.Handler())
